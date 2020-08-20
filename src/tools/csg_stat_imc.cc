@@ -194,13 +194,19 @@ Imc::interaction_t *Imc::AddInteraction(tools::Property *p) {
   i->_p = p;
 
   // if option threebody does not exist, replace it by default of 0
-  i->_threebody = p->ifExistsReturnElseReturnDefault<bool>("threebody", 0);
-
-  // if option force does not exist, replace it by default of 0
-  i->_force = p->ifExistsReturnElseReturnDefault<bool>("force", 0);
-
+  i->_threebody = false;
+  if (p->exists("threebody")) {
+    i->_threebody = p->get("threebody").as<bool>();
+  }
+  i->_force = false;
+  if (p->exists("force")) {
+    i->_force = p->get("force").as<bool>();
+  }
   // if option cut does not exist, replace it by default of 0.37 nm
-  i->_cut = p->ifExistsReturnElseReturnDefault<double>("cut", 0.37);
+  i->_cut = 0.37;
+  if (p->exists("cut")) {
+    i->_cut = p->get("cut").as<double>();
+  }
 
   // initialize the current and average histogram
   votca::Index n =
